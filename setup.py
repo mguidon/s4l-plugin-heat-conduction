@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="s4l-heat-conduction-plugin",
-    version="1.0.0",
+    version="1.0.1",
     description="A simulation plugin for S4L",
     author="Manuel Guidon",
     author_email="guidon@zmt.swiss",

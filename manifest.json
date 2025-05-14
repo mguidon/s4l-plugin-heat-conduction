@@ -2,7 +2,7 @@
     "icon" : "integration/simulator_icon.png",
     "title" : "Heat Conduction",
     "description" : "Simluation plugin to study the heat equation in steady state",
-    "version" : "1.0.0",
+    "version" : "1.0.1",
     "sim4life" : "9.0.0",
     "author" : "Manuel Guidon",
     "author_email" : "guidon@zmt.swiss",
