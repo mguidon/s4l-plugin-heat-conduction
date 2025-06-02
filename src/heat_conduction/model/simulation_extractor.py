@@ -1,16 +1,22 @@
 #!python3
 
-
+import asyncio
 import json
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
+from enum import Enum
 
 import heat_conduction.solver.driver.api_models as mdl
 
+# Import S4L core modules
+# Note: In test environment, these imports may not resolve
+# but they work in the actual S4L plugin environment
 import XCore as xc
+import XCoreMath as xcm
 import XPostProcessor as xp
 import XPostProPython as pp
+from XCore import Color, Unit
 
 FILENAME_SUFFIX = ".vtr"
 JSON_OUTPUT = "summary.json"
@@ -344,6 +350,10 @@ class SimulationExtractorImpl:
         output = self._outputs[output_index]
         return output if output is not None else xp.FloatFieldData()
 
+class ExampleEnum(Enum):
+    ENTRY_1 = "Enum Entry 1"
+    ENTRY_2 = "Enum Entry 2"
+    ENTRY_3 = "Enum Entry 3"
 
 class AlgorithmImpl(IExtractorParent):
     """
@@ -374,6 +384,103 @@ class AlgorithmImpl(IExtractorParent):
         prop.Description = "Results Dir."
 
         parent.Icon = "icons/XPostProcessor/field_extractor.ico"
+
+
+        prop = self.add_property("show_settings", xc.PropertyBool(True))
+        prop.Description = "Show Settings"
+
+        self.show_settings = prop
+
+        # Group property to organize related settings
+        example_group = self.add_property("example_settings", xc.PropertyGroup())
+        example_group.Description = "Example Settings"
+
+        self.example_group = example_group
+
+        prop = example_group.Add("string", xc.PropertyString("This is a string"))
+        prop.Description = "String Property"
+
+        # Number properties
+        prop = example_group.Add("int", xc.PropertyInt(12))
+        prop.Description = "Integer Property"
+        prop.Min = 0
+        prop.Max = 100
+
+        prop = example_group.Add("real", xc.PropertyReal(1.5))
+        prop.Description = "Real Property"
+        prop.Min = 0.0
+        prop.Max = 10.0
+        prop.Unit = Unit("K")  # Kelvin unit
+        
+        # Slider property
+        prop = example_group.Add("slider_value", xc.PropertySlider(25.0))
+        prop.Description = "Slider Value"
+        prop.Min = 0.0
+        prop.Max = 100.0
+        prop.Step = 5.0
+        
+        # Tuple properties
+        prop = example_group.Add("int_tuple", xc.PropertyIntTuple(value=[1,2,3], min=[1, 1, 1], max=[1000, 1000, 1000]))
+        prop.Description = "Integer Tuple Property"
+
+        prop = example_group.Add("real_tuple", xc.PropertyRealTuple(value=[0.1, 0.2, 0.3, 0.4], min=[0.0, -1.0, 2.0, 5.0], max=[100.00, 200.0, 300.0, 400.2]))
+        prop.Description = "Real Tuple Property"
+        
+        # Enum property
+        prop = example_group.Add("enum", xc.PropertyEnum(
+            [
+                ExampleEnum.ENTRY_1.value,
+                ExampleEnum.ENTRY_2.value,
+                ExampleEnum.ENTRY_3.value,
+            ],
+            0,
+        ))
+        prop.Description = "Enum Property"
+        
+        # Boolean property
+        prop = example_group.Add("bool_value", xc.PropertyBool(False))
+        prop.Description = "Boolean Property"
+        
+        # Color property
+        color = Color(red=0.5, green=0.7, blue=0.9, alpha=1.0)
+        prop = example_group.Add("color", xc.PropertyColor(color))
+        prop.Description = "Color Property"
+        
+        # File property
+        prop = example_group.Add("input_file", xc.PropertyFile(is_folder=False, is_input=True))
+        prop.Description = "Input File"
+        prop.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*"
+
+        prop = example_group.Add("output_file", xc.PropertyFile(is_folder=False, is_input=False))
+        prop.Description = "Output File"
+        prop.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*"
+        
+        # Directory property
+        prop = example_group.Add("input_folder", xc.PropertyFile(is_folder=True, is_input=True))
+        prop.Description = "Input Folder"
+
+        prop = example_group.Add("output_folder", xc.PropertyFile(is_folder=True, is_input=False))
+        prop.Description = "Output Folder"
+
+        # connect not right away, but after the seriazliation
+        asyncio.get_event_loop().call_soon(
+            self._connect_signals
+        )
+
+    def _connect_signals(self) -> None:
+
+        def visibility_changed(
+                prop: xc.Property, mod_type: xc.PropertyModificationTypeEnum
+            ):
+                if mod_type != xc.kPropertyModified:
+                    return
+            
+                print(f"Visibility changed: {prop.Value}")
+                self.example_group.Visible = prop.Value
+
+
+        self.show_settings.OnModified.Connect(visibility_changed)
+
 
     def add_property(self, name: str, property: xc.Property) -> xc.Property:
         """
