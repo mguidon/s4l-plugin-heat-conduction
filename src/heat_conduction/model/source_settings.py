@@ -132,8 +132,10 @@ class SourceSettings(HasGeometries):
         point = self._geometries[0].entity
 
         points = xm.GetVertices(point)
+
         assert len(points)
         point = points[0]
+        assert isinstance(point, xm.Vertex)
 
         return api_models.SourceSettings(
             volumetric_heat_source=volumetric_heat_source_prop.Value,

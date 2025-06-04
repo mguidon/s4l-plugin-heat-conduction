@@ -9,6 +9,9 @@ from enum import Enum
 
 import heat_conduction.solver.driver.api_models as mdl
 
+import heat_conduction.model.example_plots as example_plots
+import s4l_core.simulator_plugins.common.plugin_plot_manager as ppm
+
 # Import S4L core modules
 # Note: In test environment, these imports may not resolve
 # but they work in the actual S4L plugin environment
@@ -17,6 +20,8 @@ import XCoreMath as xcm
 import XPostProcessor as xp
 import XPostProPython as pp
 from XCore import Color, Unit
+
+
 
 FILENAME_SUFFIX = ".vtr"
 JSON_OUTPUT = "summary.json"
@@ -389,10 +394,12 @@ class AlgorithmImpl(IExtractorParent):
         prop = self.add_property("show_settings", xc.PropertyBool(True))
         prop.Description = "Show Settings"
 
-        self.show_settings = prop
+        self.show_settings_prop = prop
 
         # Group property to organize related settings
         example_group = self.add_property("example_settings", xc.PropertyGroup())
+        assert isinstance(example_group, xc.PropertyGroup)
+
         example_group.Description = "Example Settings"
 
         self.example_group = example_group
@@ -462,6 +469,38 @@ class AlgorithmImpl(IExtractorParent):
         prop = example_group.Add("output_folder", xc.PropertyFile(is_folder=True, is_input=False))
         prop.Description = "Output Folder"
 
+        # Plots
+        plots_group = self.add_property("plot_examples", xc.PropertyGroup())
+        assert isinstance(plots_group, xc.PropertyGroup)
+
+        plots_group.Description = "Example Plots"
+
+        self.plots_group = plots_group
+
+        prop = plots_group.Add("plots", xc.PropertyEnum(
+            [
+                "generate_line_plot",
+                "generate_multi_line_plot",
+                "generate_scatter_plot",
+                "generate_bar_plot",
+                "generate_heatmap",
+                "generate_3d_scatter",
+                "generate_3d_surface",
+                "generate_contour_plot",
+                "generate_histogram",
+                "generate_box_plot",
+            ],
+            0,
+        ))
+        prop.Description = "Example Plots"
+
+        self.plot_selector_prop = prop
+
+        prop = plots_group.Add("show_plot", xc.PropertyPushButton())
+        prop.Description = "Show Plot"
+       
+        self.show_plot_prop = prop
+
         # connect not right away, but after the seriazliation
         asyncio.get_event_loop().call_soon(
             self._connect_signals
@@ -474,12 +513,23 @@ class AlgorithmImpl(IExtractorParent):
             ):
                 if mod_type != xc.kPropertyModified:
                     return
-            
-                print(f"Visibility changed: {prop.Value}")
-                self.example_group.Visible = prop.Value
+                if prop == self.show_settings_prop:
+                    assert isinstance(prop, xc.PropertyBool)
+                    # Toggle visibility of the example group based on the property value
+                    self.example_group.Visible = prop.Value
+        
+        self.show_settings_prop.OnModified.Connect(visibility_changed)
 
+        def show_plot():
+            assert isinstance(self.plot_selector_prop, xc.PropertyEnum)
 
-        self.show_settings.OnModified.Connect(visibility_changed)
+            plot_name = self.plot_selector_prop.ValueDescription
+            plot_data = getattr(example_plots, plot_name)()
+            ppm.create_plot(plot_data)
+                
+        assert isinstance(self.show_plot_prop, xc.PropertyPushButton)
+        self.show_plot_prop.OnClicked.Connect(show_plot)
+
 
 
     def add_property(self, name: str, property: xc.Property) -> xc.Property:
