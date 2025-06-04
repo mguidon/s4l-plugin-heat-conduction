@@ -1,8 +1,7 @@
-from typing import Dict, List, Any, Optional, Union
 import numpy as np
 import math
 
-def generate_line_plot() -> Dict:
+def generate_line_plot() -> dict:
     id = "1"
     title = "Line Plot"
     x_values = list(np.linspace(0, 10, 100))
@@ -63,7 +62,7 @@ def generate_line_plot() -> Dict:
     return plot_config
 
 
-def generate_multi_line_plot() -> Dict:
+def generate_multi_line_plot() -> dict:
     id = "2"
     title = "Multiple Lines Plot"
     x = list(np.linspace(0, 2*np.pi, 100))
@@ -128,7 +127,7 @@ def generate_multi_line_plot() -> Dict:
     return plot_config
 
 
-def generate_scatter_plot() -> Dict:
+def generate_scatter_plot() -> dict:
     id = "3"
     title = "Scatter Plot"
     np.random.seed(42)
@@ -188,7 +187,7 @@ def generate_scatter_plot() -> Dict:
     return plot_config
 
 
-def generate_bar_plot() -> Dict:
+def generate_bar_plot() -> dict:
     id = "4"
     title = "Bar Chart"
     x_categories = ["Category A", "Category B", "Category C", "Category D", "Category E"]
@@ -247,7 +246,7 @@ def generate_bar_plot() -> Dict:
     return plot_config
 
 
-def generate_heatmap() -> Dict:
+def generate_heatmap() -> dict:
     id = "5"
     title = "Heatmap"
     x = np.linspace(-5, 5, 30)
@@ -309,7 +308,7 @@ def generate_heatmap() -> Dict:
     return plot_config
 
 
-def generate_3d_scatter() -> Dict:
+def generate_3d_scatter() -> dict:
     id = "6"
     title = "3D Scatter Plot"
     t = np.linspace(0, 10*np.pi, 100)
@@ -371,7 +370,7 @@ def generate_3d_scatter() -> Dict:
     return plot_config
 
 
-def generate_3d_surface() -> Dict:
+def generate_3d_surface() -> dict:
     id = "7"
     title = "3D Surface Plot"
     x = np.linspace(-5, 5, 50)
@@ -426,7 +425,7 @@ def generate_3d_surface() -> Dict:
     return plot_config
 
 
-def generate_contour_plot() -> Dict:
+def generate_contour_plot() -> dict:
     id = "8"
     title = "Contour Plot"
     x = np.linspace(-3, 3, 40)
@@ -481,7 +480,7 @@ def generate_contour_plot() -> Dict:
     return plot_config
 
 
-def generate_histogram() -> Dict:
+def generate_histogram() -> dict:
     id = "9"
     title = "Histogram"
     np.random.seed(42)
@@ -536,7 +535,7 @@ def generate_histogram() -> Dict:
     return plot_config
 
 
-def generate_box_plot() -> Dict:
+def generate_box_plot() -> dict:
     id = "10"
     title = "Box Plot"
     np.random.seed(42)

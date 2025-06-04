@@ -8,13 +8,10 @@ from pathlib import Path
 from enum import Enum
 
 import heat_conduction.solver.driver.api_models as mdl
+import heat_conduction.model.example_plots.api_models as example_plots
 
-import heat_conduction.model.example_plots as example_plots
 import s4l_core.simulator_plugins.common.plugin_plot_manager as ppm
 
-# Import S4L core modules
-# Note: In test environment, these imports may not resolve
-# but they work in the actual S4L plugin environment
 import XCore as xc
 import XCoreMath as xcm
 import XPostProcessor as xp
