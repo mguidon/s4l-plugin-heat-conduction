@@ -8,7 +8,7 @@ from pathlib import Path
 from enum import Enum
 
 import heat_conduction.solver.driver.api_models as mdl
-import heat_conduction.model.example_plots.api_models as example_plots
+import heat_conduction.model.example_plots as example_plots
 
 import s4l_core.simulator_plugins.common.plugin_plot_manager as ppm
 
