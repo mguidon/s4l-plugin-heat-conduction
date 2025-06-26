@@ -104,6 +104,8 @@ k = material.thermal_conductivity
 T = np.zeros((nx, ny, nz))  # Temperature field
 Q = np.zeros((nx, ny, nz))  # Heat source field
 
+logger.info(f"Grid size: {nx} x {ny} x {nz} (total {nx * ny * nz} points)")
+
 # --- Insert Heat Sources ---
 # Place volumetric heat sources at their specified locations
 for src in sim.source_setings:
@@ -154,8 +156,7 @@ for it in range(max_iter):
                     + T_old[i, j - 1, k_]
                     + T_old[i, j, k_ + 1]
                     + T_old[i, j, k_ - 1]
-                    + grid.dx ** 2 * Q[i, j, k_] / k
-                ) / 6.0
+                ) / 6.0 + (grid.dx ** 2 * Q[i, j, k_]) / (6.0 * k)
     error = np.max(np.abs(T - T_old))
     if it % 100 == 0:
         logger.info(f"Iteration {it}, max error: {error:.6f}")

@@ -18,8 +18,6 @@ import XPostProcessor as xp
 import XPostProPython as pp
 from XCore import Color, Unit
 
-
-
 FILENAME_SUFFIX = ".vtr"
 JSON_OUTPUT = "summary.json"
 

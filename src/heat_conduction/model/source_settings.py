@@ -49,7 +49,7 @@ class SourceSettings(HasGeometries):
         self._properties = XCoreHeadless.DialogOptions()
         self._properties.Description = "Source Settings"
 
-        volumetric_heat_source = XCore.PropertyReal(100.0, 0.0, 0.0, XCore.Unit("W/m³"))
+        volumetric_heat_source = XCore.PropertyReal(1.0, 0.0, 100.0, XCore.Unit("W/m³"))
         volumetric_heat_source.Description = "Volumetric Heat Source"
         self._properties.Add("volumetric_heat_source", volumetric_heat_source)
 
