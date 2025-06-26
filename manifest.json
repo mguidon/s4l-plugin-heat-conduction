@@ -1,15 +1,15 @@
 {
     "icon" : "integration/simulator_icon.png",
     "title" : "Heat Conduction",
-    "description" : "Simulation plugin to study the heat equation in steady state. [Example Plugin]",
-    "version" : "1.0.5",
+    "description" : "[Example Plugin] Simulation plugin to study the heat equation in steady state.",
+    "version" : "1.0.0",
     "sim4life" : "9.0.0",
     "author" : "Manuel Guidon",
     "author_email" : "guidon@zmt.swiss",
     "details" : "README.md",
     "license" : "LICENSE",
     "tags" : ["Heat Equation", "Thermodynamics"],
-    "links" : {"repository" : "github.com/yourusername/yourrepository",
-              "website" : "https://yourwebsite.com",
-              "documentation" : "https://yourwebsite.com/docs"}
+    "links" : {"repository" : "https://github.com/mguidon/s4l-plugin-heat-conduction",
+              "website" : "https://github.com/ZurichMedTech/s4l-plugins-community",
+              "documentation" : "https://zurichmedtech.github.io/s4l-plugins-documentation/"}
 }
